@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https:; img-src data: blob:; manifest-src 'self' data:; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; connect-src 'self' https: http://127.0.0.1:* http://localhost:*; img-src data: blob:; manifest-src 'self' data:; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="color-scheme" content="dark light">
 
 <title>NexusBot · 个人档案与对话分身</title>
@@ -736,6 +736,12 @@ footer{padding:46px 0;text-align:center;color:var(--muted);font-size:12px;border
           <button data-act="resetCfg">重置</button>
         </div>
         <div class="row">
+          <button class="pri" data-act="bridgeCfg" id="bridgeBtn">🔗 一键接入本机模型</button>
+        </div>
+        <div class="hint" style="margin-top:8px">
+          本机模型：双击 <b>start_model_bridge.bat</b> 启动模型桥，再点上方按钮自动填入本机 mimo 网关配置（密钥只经本机回环进浏览器，不进任何网页/仓库）。<br>
+          模型不可用时自动改用本地档案检索作答，回答仍带可回溯依据。
+        <div class="row">
           <button data-act="exportEnc">加密导出档案</button>
           <button data-act="exportPlain">导出 JSON</button>
         </div>
@@ -792,7 +798,7 @@ const ITEMS = [{"id": "P01", "type": "线索", "typeKey": "obs", "title": "先�
 const SOURCES = [{"id": "A01", "title": "电脑检查与系统服务问答", "platform": "Qoder", "kind": "AI会话", "desc": "用户问题与历史 AI 建议分开；不反映当前电脑状态。", "boundary": "", "date": "2026-09-29"}, {"id": "A03", "title": "清理脚本的用途与来历", "platform": "Qoder", "kind": "AI会话", "desc": "用户提问可见，脚本来源和残留状态属于未复核的 AI 说明。", "boundary": "", "date": "2026-10-26"}, {"id": "A04", "title": "资料识别与用途追问", "platform": "WorkBuddy", "kind": "AI会话", "desc": "保留用户问题；“会 C”“汽车安全背景”等历史 AI 判断不直接作为个人事实。", "boundary": "", "date": "2026-10-08"}, {"id": "A05", "title": "vehsec 自动任务与晨报", "platform": "WorkBuddy", "kind": "自动任务", "desc": "任务目标、AI 完成声明、可验证成果是三种不同证据。", "boundary": "", "date": "2026-10-15"}, {"id": "A06", "title": "PCR532 与 CPU 卡问答", "platform": "WorkBuddy", "kind": "AI会话", "desc": "原始诊断日志整段剔除；不保存卡片标识、短密钥或认证操作流程到网页。", "boundary": "", "date": "2026-10-24"}, {"id": "D04", "title": "东方 S3 相机维护", "platform": "抖音已有整理", "kind": "抖音整理", "desc": "文字依赖视频画面，存在错字；不作为独立拆机教程。", "boundary": "", "date": "2025-11-28"}, {"id": "D07", "title": "Claude Code Skills 机制", "platform": "抖音已有整理", "kind": "抖音整理", "desc": "流程思路可整理；效果和成本没有本轮实验支持。", "boundary": "", "date": "2026-06-09"}, {"id": "D08", "title": "红烧酱油鸡腿", "platform": "抖音已有整理", "kind": "抖音整理", "desc": "保留步骤与用量，标明缺少食材基数；补充食品安全边界。", "boundary": "", "date": "2026-07-14"}, {"id": "D09", "title": "骑行与摔车建议", "platform": "抖音已有整理", "kind": "抖音整理", "desc": "包含不适宜泛化的危险建议，不能直接作为操作指南。", "boundary": "", "date": "2026-08-18"}, {"id": "D11", "title": "抖音收藏/喜欢 摘要库（summaries_me）", "platform": "抖音", "kind": "抖音数据集", "desc": "2520 条机器摘要（points 为内容要点、kw 为关键词），来自收藏与喜欢视频的自动整理；不是私聊，未经人工逐条核验。", "boundary": "", "date": "2026-10-08"}, {"id": "D12", "title": "抖音收藏/喜欢 元数据（manifest）", "platform": "抖音", "kind": "抖音数据集", "desc": "9741 条记录：点赞 4852 / 收藏 4793 / 二者皆有 96；含收录时间戳 ct、作者 a、描述 d。时间戳是视频被收录的时间，不是观看或创建时间。", "boundary": "", "date": "2026-10-08"}, {"id": "D13", "title": "豆包对话导出 · 账号A（昵称「剑伤」）", "platform": "豆包", "kind": "ai-chat-export", "desc": "", "boundary": "", "date": ""}, {"id": "D14", "title": "豆包对话导出 · 账号B", "platform": "豆包", "kind": "ai-chat-export", "desc": "", "boundary": "", "date": ""}, {"id": "D15", "title": "DeepSeek 官方导出（聊天正文）", "platform": "DeepSeek", "kind": "ai-chat-export", "desc": "", "boundary": "", "date": ""}, {"id": "A25", "title": "手机截图库（564 张 OCR 转写）", "platform": "OPPO K9s 手机", "kind": "手机截图", "desc": "[该来源属受限来源类，描述不予公开]", "boundary": "", "date": "2023-07 ~ 2026-06"}, {"id": "A26", "title": "腾讯会议学术报告纪要与逐字稿（2026-07-11）", "platform": "腾讯会议", "kind": "会议纪要", "desc": "两场线上讲座：吴江教授《数据要素与数据智能应用》、奇安信黄宝《人工智能时代的职业准备与人才需求宣讲》。仅取讲座内容；其他参会者（含学生姓名、嘉宾私人信息）不入档。", "boundary": "", "date": "2026-07-11"}, {"id": "A28", "title": "主力机应用与使用元数据（某安卓机型）", "platform": "某安卓机型 手机", "kind": "设备元数据", "desc": "273 个第三方应用清单、近 24 小时使用/通知事件、截图文件名时间轴、存储结构。仅设备侧统计，不含聊天正文或账号信息。", "boundary": "", "date": "2026-10-31"}, {"id": "A29", "title": "主力机 Download 文档库（信安/学业/设备材料）", "platform": "某安卓机型 手机", "kind": "本地文档", "desc": "[该来源属受限来源类，描述不予公开]", "boundary": "", "date": "2026-08 ~ 2026-10"}, {"id": "A30", "title": "主力机 Documents 与班级材料（敏感级）", "platform": "某安卓机型 手机", "kind": "本地文档", "desc": "[该来源属受限来源类，描述不予公开]", "boundary": "", "date": "2025-10 ~ 2026-10"}, {"id": "A31", "title": "[该来源属受限来源类，描述不予公开]", "platform": "某安卓机型 手机", "kind": "通信记录", "desc": "[该来源属受限来源类，描述不予公开]", "boundary": "", "date": "2026-05 ~ 2026-10-31"}, {"id": "A33", "title": "主力机日历与通知历史", "platform": "某安卓机型 手机", "kind": "设备元数据", "desc": "13 条日历（游戏签到、志愿汇签退提醒）与通知历史（微信课程群、QQ、腾讯会议、热点/USB 状态）。群名只保留课程名，群号与他人昵称不入档。", "boundary": "", "date": "2026-07 ~ 2026-10-31"}, {"id": "A34", "title": "RFID/NFC 工具工作目录（NfcTools、pcr532）", "platform": "某安卓机型 手机", "kind": "本地文档", "desc": "手机存储下两套 NFC/RFID 工具的工作目录：NfcTools 与 pcr532，含 proxmark3 子目录、dumpFile/keyFile/pn53x 等结构。这是硬件安全动手实操的直接物证。", "boundary": "", "date": "2026-10-31"}, {"id": "A37", "title": "截图 OCR：RFID/硬件动手线（第二批）", "platform": "某安卓机型 手机", "kind": "截图OCR", "desc": "[该来源属受限来源类，描述不予公开]", "boundary": "", "date": "2025-05 ~ 2026-10"}, {"id": "A38", "title": "截图 OCR：网安学习与 CTF 痕迹", "platform": "某安卓机型 手机", "kind": "截图OCR", "desc": "网安学习线的截图证据：白帽学习路线、CTF 赛事奖金体系、Metasploit/Kali、网络空间测绘工具、DASCTF 等赛事文件夹、网安学习平台打卡、汽车/物联网安全岗位浏览。⛔ 群号/他人资料不入档。", "boundary": "", "date": "2026-01 ~ 2026-10"}, {"id": "A39", "title": "截图 OCR：编程学习与课程", "platform": "某安卓机型 手机", "kind": "截图OCR", "desc": "[该来源属受限来源类，描述不予公开]", "boundary": "", "date": "2025-07 ~ 2026-10"}, {"id": "A40", "title": "截图 OCR：就业与职业规划", "platform": "某安卓机型 手机", "kind": "截图OCR", "desc": "就业信息搜集线：小米实习 JD、官方就业平台、岗位方向对比表、IT 职业盘点、秋招体感帖、渗透测试岗 JD。⛔ 招聘人姓名/联系方式不入档。", "boundary": "", "date": "2025-10 ~ 2026-10"}, {"id": "A41", "title": "截图 OCR：数码与生活消费", "platform": "某安卓机型 手机", "kind": "截图OCR", "desc": "[该来源属受限来源类，描述不予公开]", "boundary": "", "date": "2025-08 ~ 2025-10"}];
 const PUBLIC = {"text": "我在探索安全工具、AI 辅助开发与技术资料整理，也在尝试把零散问题变成可复用的项目和清楚的说明。", "label": "编辑草稿，不是你的原话；尚未获准公开", "project": "vehsec：汽车安全工具项目候选。需确认仓库、本人贡献、当前功能与可运行演示后再展示。", "excluded": ["不写学校、真实账号、联系方式或电脑安全配置", "不展示卡片标识、密钥、漏洞目标与复现步骤", "不把收藏题材写成你拥有的物品、旅行经历或健康状况", "不把 AI 声称完成的测试、功能与目标 star 写成既成成果"]};
 const METRICS = {"sources": 27, "observations": 18, "knowledge": 22, "timeline": 25, "citations": 132};
-const SETTINGS = {"mode": "public", "generatedAt": "2026-11-12 21:14", "defaultBase": "", "defaultModel": "mimo-v2.6-flash", "defaultKey": "", "itemCount": 65, "version": "v2.8", "commit": "0585d74"};
+const SETTINGS = {"mode": "public", "generatedAt": "2026-11-13 09:37", "defaultBase": "", "defaultModel": "mimo-v2.6-flash", "defaultKey": "", "itemCount": 65, "version": "v2.8", "commit": "be94352"};
 const CITE_CTX = {};
 const CHANGELOG = [{"date": "2026-11-12", "ver": "v2.8", "title": "NexusBot 品牌重铸", "desc": "全站更名 NexusBot · 深空玻璃拟态视觉系统（极光渐变 / 玻璃导航 / 光扫按钮 / 微动效）· 移动端汉堡菜单 · 修复导航栏搜索与字号死按钮 · PWA 图标与主题色随品牌更新"}, {"date": "2026-11-12", "ver": "v2.7", "title": "数据与设置", "desc": "设置面板集中化 · 主题色 6 款 · 动效开关 · 数据完整性自检 · 一键导出全部数据 · 变更日志 · 构建信息 · 本地数据体积与清理 · 对话 TXT 导出"}, {"date": "2026-11-12", "ver": "v2.6", "title": "时间线与可视化", "desc": "密度热力图联动筛选 · 年份胶囊计数 · 逐条/月/年三档缩放 · 历史上的今天 · 相似条目推荐 · 数据覆盖度报告 · 词云同源过滤 · 关系图谱"}, {"date": "2026-11-12", "ver": "v2.5", "title": "检索强化", "desc": "布尔搜索 · 拼音首字母 · 模糊容错 · 高级筛选 · 保存的搜索 · 标签过滤 · 引文反查上下文 · 结果分组"}, {"date": "2026-11-12", "ver": "v2.4", "title": "核心交互", "desc": "命令面板 · g 系快捷键 · 收藏星标 · 随机漫游 · 深链路由 · 阅读进度 · 字号 3 档 · 朗读 · 复制 Markdown · 搜索历史 · 自动补全 · 弹窗翻页"}, {"date": "2026-11-11", "ver": "v2.3", "title": "加密在线版", "desc": "AES-256 加密发布 + 密码门 · 全球可访问 · 泄漏扫描纳入发布闸门"}, {"date": "2026-11-11", "ver": "v2.2", "title": "双版本构建", "desc": "私有版/公开版分离 · 公开版白名单脱敏 · 引文三键化 · 红队泄漏扫描"}, {"date": "2026-11-10", "ver": "v2.0", "title": "档案查看器重建", "desc": "知识库/时间线/兴趣图谱/数据画像/来源/隐私边界六大板块"}, {"date": "2026-11-08", "ver": "v1.0", "title": "首个版本", "desc": "个人数字档案网页雏形 + 离线问答"}];
 
@@ -1912,7 +1918,10 @@ function normalizeBase(raw, mode){
   try{ u = new URL(s); }catch(e){ throw new Error("端点需为完整 URL（含 http:// 或 https://）"); }
   if(u.username || u.password) throw new Error("端点 URL 不得包含账号密码");
   if(u.protocol !== "http:" && u.protocol !== "https:") throw new Error("仅支持 http/https 协议");
-  if(mode === "public" && u.protocol !== "https:") throw new Error("公开版仅允许 https 端点");
+  // 本机回环（模型桥）不属于内网拓扑泄露面：http 也放行，否则公开版接不了本机模型桥
+  const loopHost = /^(127\.0\.0\.1|localhost|\[::1\])$/.test(u.hostname);
+  if(mode === "public" && u.protocol !== "https:" && !loopHost)
+    throw new Error("公开版仅允许 https 端点（本机模型桥 127.0.0.1/localhost 除外）");
   u.search = ""; u.hash = "";
   return u.toString().replace(/\/+$/, "");
 }
@@ -1934,6 +1943,11 @@ function getCfg(){
 function fillCfg(){
   const c = getCfg();
   $("cfgBase").value = c.base; $("cfgModel").value = c.model; $("cfgKey").value = c.key;
+  let dis = false;
+  try{ dis = !!(JSON.parse(localStorage.getItem(CFG_KEY)||"{}").disabled); }catch(e){}
+  $("cfgStatus").innerHTML = dis
+    ? "⚠ 模型已被『清除本机全部数据』停用；点上方『重置』可恢复默认配置。"
+    : "";
 }
 function saveCfg(){
   let base;
@@ -1948,6 +1962,27 @@ function saveCfg(){
 function resetCfg(){
   try{ localStorage.removeItem(CFG_KEY); }catch(e){}
   fillCfg(); setHint("已重置为默认。"); toast("已重置为默认设置");
+}
+/* F086 本机模型桥一键接入：从回环桥拉 base/model/key 一次性填入并保存。
+   密钥只经本机回环进入浏览器 localStorage，不经过任何公网页面或仓库。 */
+const BRIDGE_CFG_URL = "http://127.0.0.1:8791/cfg";
+async function bridgeCfg(){
+  setHint("正在检测本机模型桥（127.0.0.1:8791）…");
+  try{
+    const r = await fetch(BRIDGE_CFG_URL, {cache:"no-store"});
+    if(!r.ok) throw new Error("HTTP " + r.status);
+    const d = await r.json();
+    if(!d || !d.base) throw new Error("响应无配置");
+    $("cfgBase").value = d.base;
+    $("cfgModel").value = d.model || "mimo-v2.6-flash";
+    $("cfgKey").value = d.key || "";
+    saveCfg();
+    setHint("已接入本机模型桥，当前模型：" + ($("cfgModel").value || "?") + "。直接提问即可。");
+    toast("本机模型已接入");
+  }catch(e){
+    setHint("未检测到本机模型桥。请双击 start_model_bridge.bat 启动后再点此按钮。");
+    toast("未检测到本机模型桥");
+  }
 }
 /* 一键抹掉本机缓存：对话、模型配置（含密钥）、主题。
    私有版源码内置的默认密钥无法在运行时删除，用 disabled 标记禁止回落后另行提示。 */
@@ -2199,6 +2234,11 @@ async function send(q, isRegen){
     if(bub) bub.classList.remove("caret");
   }catch(e){
     ok = false;
+    // TypeError = fetch 网络层失败（CORS 预检被拒 / 端点不可达 / 断网）。
+    // 局域网网关必须经本机模型桥才对浏览器开放，这里给出可操作的修复指引。
+    if(!lastErr && e && e.name === "TypeError"){
+      lastErr = "网络请求被浏览器拦截或端点不可达（CORS/离线）。本机 mimo 网关请经模型桥接入：双击 start_model_bridge.bat，再到设置面板点『一键接入本机模型』。";
+    }
     lastErr = lastErr || (e && e.message) || "请求失败";
     clearTimeout(timer);
   }
@@ -3482,6 +3522,7 @@ document.addEventListener("click", e => {
     case "exportPlain": exportPlain(); break;
     case "saveCfg": saveCfg(); break;
     case "resetCfg": resetCfg(); break;
+    case "bridgeCfg": bridgeCfg(); break;
     case "onSend": onSend(); break;
     case "copyMsg": copyMsg(el); break;
     case "regen": regen(el); break;
